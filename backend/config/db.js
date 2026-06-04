@@ -19,9 +19,11 @@ async function initDB() {
   db.routes = [...routes];
 
   // Seed buses — attach driver info
-  db.buses = buses.map(bus => {
-    const driver = db.drivers.find(d => d.id === bus.driverId);
-    return { ...bus, driver: driver || null };
+  db.buses = buses.map((bus, index) => {
+    // Cycle through drivers (d1 to d20) to ensure diversity instead of all Rajesh Kumar
+    const assignedDriverId = `d${(index % db.drivers.length) + 1}`;
+    const driver = db.drivers.find(d => d.id === assignedDriverId);
+    return { ...bus, driverId: assignedDriverId, driver: driver || null };
   });
 
   // Seed admin & driver users
