@@ -44,9 +44,13 @@ export default function AuthPage() {
         </p>
 
         {mode === 'login' ? (
-          <LoginForm onSuccess={() => navigate('/')} />
+          <LoginForm onSuccess={(userData) => {
+            if (userData?.role === 'admin') navigate('/admin');
+            else if (userData?.role === 'driver') navigate('/driver');
+            else navigate('/');
+          }} />
         ) : (
-          <RegisterForm onSuccess={() => navigate('/')} />
+          <RegisterForm onSuccess={(userData) => navigate('/')} />
         )}
 
         <div className="auth-toggle">

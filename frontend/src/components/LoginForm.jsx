@@ -13,8 +13,8 @@ export default function LoginForm({ onSuccess }) {
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
-      if (onSuccess) onSuccess();
+      const data = await login(email, password);
+      if (onSuccess) onSuccess(data.user);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {

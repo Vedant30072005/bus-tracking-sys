@@ -26,8 +26,8 @@ export default function RegisterForm({ onSuccess }) {
 
     setLoading(true);
     try {
-      await register(name, email, password);
-      if (onSuccess) onSuccess();
+      const data = await register(name, email, password);
+      if (onSuccess) onSuccess(data.user);
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
