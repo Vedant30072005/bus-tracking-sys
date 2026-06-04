@@ -25,13 +25,13 @@ async function initDB() {
   });
 
   // Seed admin & driver users
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = await bcrypt.hash('admin', 10);
   const driverPassword = await bcrypt.hash('driver123', 10);
   db.users = [
     {
       id: 'u1',
       name: 'Admin User',
-      email: 'admin@whereismybus.com',
+      email: 'admin',
       password: hashedPassword,
       role: 'admin',
       createdAt: new Date().toISOString()

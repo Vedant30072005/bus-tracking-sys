@@ -27,13 +27,13 @@ export default function LoginForm({ onSuccess }) {
       {error && <div className="auth-error">{error}</div>}
       
       <div className="form-group">
-        <label htmlFor="login-email">Email</label>
+        <label htmlFor="login-email">Email or Username</label>
         <input
           id="login-email"
-          type="email"
+          type="text"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          placeholder="you@example.com"
+          placeholder="admin or you@example.com"
           required
         />
       </div>
@@ -62,7 +62,8 @@ export default function LoginForm({ onSuccess }) {
         fontSize: '0.8rem',
         color: 'var(--text-dim)'
       }}>
-        <strong>Demo Admin:</strong> admin@whereismybus.com / admin123
+        <strong>Demo Admin:</strong> admin / admin<br/>
+        <strong>Demo Driver:</strong> driver@whereismybus.com / driver123
       </div>
     </form>
   );
