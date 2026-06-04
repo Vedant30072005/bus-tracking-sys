@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { getSocket } from '../socket';
+import { socket } from '../socket';
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
 
@@ -42,8 +42,6 @@ export default function DriverDashboard() {
 
     setLocationError(null);
     setIsDriving(true);
-    
-    const socket = getSocket();
     
     const id = navigator.geolocation.watchPosition(
       (position) => {
