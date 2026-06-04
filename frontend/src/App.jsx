@@ -8,6 +8,7 @@ import SchedulePage from './pages/SchedulePage';
 import TrackBus from './pages/TrackBus';
 import AuthPage from './pages/AuthPage';
 import AdminPanel from './pages/AdminPanel';
+import DriverDashboard from './pages/DriverDashboard';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
               <Route path="/track/:busId" element={<TrackBus />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/driver" element={<DriverDashboard />} />
             </Routes>
           </main>
           <Routes>

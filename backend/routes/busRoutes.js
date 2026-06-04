@@ -21,6 +21,7 @@ router.get('/', (req, res) => {
     const route = db.routes.find(r => r.id === bus.routeId);
     return {
       ...bus,
+      isSimulated: bus.isSimulated !== false,
       route: route ? { id: route.id, routeName: route.routeName, from: route.from, to: route.to } : null
     };
   });

@@ -38,12 +38,15 @@ function setupTracker(io) {
       if (bus) {
         bus.currentLocation = { lat, lng };
         bus.status = 'running';
+        bus.lastDriverUpdate = Date.now();
+        bus.isSimulated = false;
         
         // Broadcast to all tracking passengers
         io.to(`bus_${busId}`).emit('bus:location', {
           busId,
           location: { lat, lng },
-          status: 'running'
+          status: 'running',
+          isSimulated: false
         });
       }
     });
@@ -59,6 +62,7 @@ function setupTracker(io) {
           type: bus.type,
           location: bus.currentLocation,
           status: bus.status,
+          isSimulated: bus.isSimulated !== false,
           route: route ? { from: route.from, to: route.to, routeName: route.routeName } : null
         };
       });
@@ -76,6 +80,13 @@ function setupTracker(io) {
   function simulateBusMovement() {
     db.buses.forEach(bus => {
       if (bus.status !== 'running') return;
+
+      // Skip simulating if a real driver is actively updating (within the last 15 seconds)
+      if (bus.lastDriverUpdate && Date.now() - bus.lastDriverUpdate < 15000) {
+        return;
+      }
+      
+      bus.isSimulated = true;
 
       const route = db.routes.find(r => r.id === bus.routeId);
       if (!route || !route.polyline || route.polyline.length < 2) return;
@@ -124,7 +135,8 @@ function setupTracker(io) {
       io.to(`bus_${bus.id}`).emit('bus:location', {
         busId: bus.id,
         location: bus.currentLocation,
-        status: bus.status
+        status: bus.status,
+        isSimulated: true
       });
     });
 
@@ -138,6 +150,7 @@ function setupTracker(io) {
         type: bus.type,
         location: bus.currentLocation,
         status: bus.status,
+        isSimulated: bus.isSimulated !== false,
         route: route ? { from: route.from, to: route.to, routeName: route.routeName } : null
       };
     });

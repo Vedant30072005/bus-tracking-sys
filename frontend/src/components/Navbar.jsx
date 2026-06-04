@@ -61,13 +61,19 @@ export default function Navbar() {
           <li><Link to="/schedule" className={isActive('/schedule')} onClick={() => setMenuOpen(false)}>Schedule</Link></li>
           <li><Link to="/track" className={isActive('/track')} onClick={() => setMenuOpen(false)}>Track Bus</Link></li>
           
-          {/* Login System Hidden Temporarily */}
-          {/* {user ? (
+          {user ? (
             <>
               {user.role === 'admin' && (
                 <li>
                   <Link to="/admin" className={isActive('/admin')} onClick={() => setMenuOpen(false)}>
                     <Settings size={16} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Admin
+                  </Link>
+                </li>
+              )}
+              {user.role === 'driver' && (
+                <li>
+                  <Link to="/driver" className={isActive('/driver')} onClick={() => setMenuOpen(false)}>
+                    <Settings size={16} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Driver Panel
                   </Link>
                 </li>
               )}
@@ -89,7 +95,7 @@ export default function Navbar() {
                 <User size={16} /> Login / Register
               </Link>
             </li>
-          )} */}
+          )}
         </ul>
       </div>
     </motion.nav>

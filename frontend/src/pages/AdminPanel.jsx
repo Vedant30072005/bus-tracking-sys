@@ -157,10 +157,15 @@ export default function AdminPanel() {
                     <td>{bus.route?.from} → {bus.route?.to}</td>
                     <td>{bus.driver?.name || '—'}</td>
                     <td>
-                      <span className={`status-indicator status-${bus.status}`}>
-                        <span className="status-dot"></span>
-                        {bus.status}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span className={`status-indicator status-${bus.status}`}>
+                          <span className="status-dot"></span>
+                          {bus.status}
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: bus.isSimulated ? '#8b5cf6' : '#10b981', fontWeight: 600 }}>
+                          {bus.isSimulated ? '🤖 Simulated' : '👨‍✈️ Real GPS'}
+                        </span>
+                      </div>
                     </td>
                     <td>
                       <button className="admin-btn admin-btn-edit" onClick={() => navigate(`/track/${bus.id}`)}>
