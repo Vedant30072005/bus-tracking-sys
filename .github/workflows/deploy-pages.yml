@@ -43,7 +43,7 @@ jobs:
         env:
           VITE_API_URL: https://bus-tracking-sys.onrender.com/api
           VITE_BACKEND_URL: https://bus-tracking-sys.onrender.com
-        run: npm run build
+        run: npm run build -- --base=/bus-tracking-sys/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
