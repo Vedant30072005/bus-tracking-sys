@@ -1,0 +1,72 @@
+Remaining implementation steps — pick up later
+
+1) Scale sockets with Redis
+- Install packages: `npm install ioredis @socket.io/redis-adapter`
+- Update `backend/server.js` to create Redis clients and attach adapter:
+  - require { createAdapter } from '@socket.io/redis-adapter'
+  - const pubClient = createClient({ url: process.env.REDIS_URL }); await pubClient.connect();
+  - io.adapter(createAdapter(pubClient, subClient))
+- Add `REDIS_URL` to `.env` and `docker-compose.yml` (add `redis` service)
+- Test by running multiple backend instances and ensuring events propagate.
+
+Files to edit: `backend/server.js`, add `REDIS_URL` to `.env.example`, update `docker-compose.yml` to include `redis` service.
+
+Commands:
+cd backend
+npm install ioredis @socket.io/redis-adapter
+# (docker)
+docker-compose up -d redis
+
+
+2) Make frontend a PWA
+- Add `vite-plugin-pwa`: `cd frontend && npm install vite-plugin-pwa`
+- Update `frontend/vite.config.js` to include the plugin with a `manifest` and service worker options.
+- Add `manifest.json` and app icons under `frontend/public/`.
+- Register the service worker in `src/main.jsx` (or `index` entry).
+- Test in Chrome DevTools > Application: Service Worker and Installable.
+
+Files to edit: `frontend/vite.config.js`, `frontend/src/main.jsx`, `frontend/public/manifest.json`, add icons.
+
+Commands:
+cd frontend
+npm install vite-plugin-pwa
+# Run dev server and test
+npm run dev
+
+
+3) Improve security hardening
+- Add middleware: `helmet`, `express-rate-limit`, and input validation (e.g., `express-validator` or `joi`).
+- Sanitize inputs and validate request bodies on auth and CRUD endpoints.
+- Enforce secure cookie flags and strong JWT secret from environment.
+- Add CORS allowed origins config and rate-limiting on sensitive endpoints.
+
+Files to edit: `backend/server.js`, `backend/middleware/auth.js`, route files under `backend/routes/`.
+
+Commands:
+cd backend
+npm install helmet express-rate-limit express-validator xss-clean
+
+
+4) Migrate codebase to TypeScript (incremental)
+- Add TS support: `npm install -D typescript ts-node @types/node @types/express @types/socket.io` (for backend)
+- Add `tsconfig.json` at repo root or per-package. Convert files incrementally: start with `backend`.
+- Update build/test scripts; consider `ts-jest` for tests.
+- For frontend: consider migrating to TSX (`.tsx`) after stabilizing backend.
+
+Files to add/edit: `tsconfig.json`, update package.json scripts in `backend` and `frontend`.
+
+Commands:
+# Backend
+cd backend
+npm install -D typescript ts-node @types/node @types/express @types/socket.io ts-jest
+npx tsc --init
+
+
+How to continue later
+- When you restart, copy the contents of this file back into the chat and tell me which step to start with.
+- I can implement each step sequentially and run tests or Docker Compose as needed.
+
+Notes
+- I left smaller tasks (CI, HTTPS, logging) completed. These remaining steps are larger and involve infra changes; pick one to start.
+
+End of file.

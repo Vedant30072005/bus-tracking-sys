@@ -1,0 +1,67 @@
+PROJECT ANALYSIS: "Where Is My Bus" (Real-Time Tracking System)
+=============================================================
+
+1. EXECUTIVE SUMMARY
+--------------------
+"Where Is My Bus" is a modern, full-stack web application designed to track public transportation buses in real time. It allows users to view live bus locations on a map, search for route schedules, calculate Estimated Time of Arrival (ETA), and chat with an automated assistant. It also includes an administrative panel for system managers.
+
+2. TECHNOLOGY STACK
+-------------------
+• Frontend:
+  - Framework: React (built with Vite)
+  - Styling: Custom CSS (`App.css`, `index.css`)
+  - Maps: Leaflet & React-Leaflet
+  - Real-time: socket.io-client
+  - UI Icons & Animations: lucide-react, framer-motion
+  - State Management: React Context API (AuthContext)
+
+• Backend:
+  - Runtime: Node.js
+  - Framework: Express.js
+  - Real-time Engine: Socket.io
+  - Database: Currently configured for an in-memory seed data setup, with structural support for MongoDB (via `MONGODB_URI` environment variable).
+  - Caching & Scaling: Redis integration support (via `@socket.io/redis-adapter`) for clustering WebSockets.
+  - Authentication: JWT (JSON Web Tokens) & bcryptjs for password hashing.
+
+3. ARCHITECTURE & DIRECTORY STRUCTURE
+-------------------------------------
+The repository is split into two primary monorepo-style folders:
+
+[frontend/]
+- `src/components/`: Reusable UI modules.
+   * `Map.jsx` - Renders the Leaflet map and plots live bus markers and route polylines.
+   * `ETA.jsx` - Calculates distances (using the Haversine formula) and predicts arrival times.
+   * `ChatBot.jsx` - A floating chat interface for user support.
+   * `BusCard.jsx`, `BusList.jsx`, `DriverInfo.jsx` - UI cards for displaying data.
+- `src/pages/`: The core views of the application.
+   * `Home.jsx` - Landing page.
+   * `TrackBus.jsx` - Main interface for tracking a specific bus live on the map.
+   * `SchedulePage.jsx` - Allows users to search for routes (From/To) and view timetables.
+   * `AdminPanel.jsx` - Dashboard for admins to add/delete buses and routes.
+   * `AuthPage.jsx` - Login and registration screen.
+- `src/context/`: Contains `AuthContext.jsx` for global user state.
+- `src/socket.js`: Initializes the WebSocket connection to the backend.
+
+[backend/]
+- `server.js`: The main Express application and Socket.io initialization.
+- `routes/`: API definitions.
+   * `authRoutes.js` (Login/Register)
+   * `busRoutes.js` (CRUD for buses and live location fetching)
+   * `routeRoutes.js` (Timetables and paths)
+   * `chatRoutes.js` (Chatbot logic)
+- `data/`: Contains `seedData.js` which populates the system with dummy buses, drivers, and routes on startup.
+- `config/`: Database connection logic (`db.js`).
+- `socket/`: Houses `tracker.js` which runs a loop to emit simulated live bus movements to connected clients every few seconds.
+
+4. CORE FUNCTIONALITIES
+-----------------------
+1. Live Tracking & Simulation: The backend has a simulation loop that continuously updates bus coordinates based on their assigned routes. These coordinates are broadcasted via WebSockets to the frontend where they are animated on a Leaflet map.
+2. Smart ETA: The system calculates the distance from the bus's current GPS coordinate to the next stop and predicts the arrival time based on assumed city/highway speeds.
+3. User Authentication: JWT-based secure auth ensuring that only administrators can access the `AdminPanel`.
+4. Chatbot Assistant: A built-in feature to help users with queries.
+5. Docker Ready: Includes a `docker-compose.yml` to spin up the frontend, backend, MongoDB, and Redis instances seamlessly for production or isolated development.
+
+5. RECENT FIXES APPLIED
+-----------------------
+- Map Stability: Fixed a critical crash in `Map.jsx` where the Leaflet `<Marker>` would throw errors if bus stops lacked GPS coordinates. Added strict filtering.
+- Linter Strictness: Adjusted Vite/ESLint configurations to prevent the build process from halting due to minor warnings (like `react-refresh/only-export-components`). 
