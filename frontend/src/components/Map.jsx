@@ -171,22 +171,22 @@ export default function Map({
 
         {/* Route Polylines */}
         {routes.map((route, idx) => {
-          const polylinePath = (route.polyline && route.polyline.length > 0) 
+          const polylinePath = (Array.isArray(route.polyline) && route.polyline.length > 0) 
             ? route.polyline 
             : (route.stops && route.stops.length > 0) 
               ? route.stops.map(s => [s.lat, s.lng]).filter(p => p[0] && p[1])
               : [];
 
-          return polylinePath.length > 0 && (
+          return polylinePath.length > 1 && (
             <Polyline
               key={`route-${idx}`}
               positions={polylinePath}
               pathOptions={{
                 color: '#00d4ff',
-                weight: 4,
-                opacity: 0.8,
-                dashArray: '10, 8',
-                lineCap: 'round'
+                weight: 5,
+                opacity: 0.9,
+                lineCap: 'round',
+                lineJoin: 'round'
               }}
             />
           );
