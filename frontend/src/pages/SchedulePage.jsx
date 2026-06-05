@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
 
 export default function SchedulePage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchFrom, setSearchFrom] = useState(searchParams.get('from') || '');
@@ -193,21 +194,50 @@ export default function SchedulePage() {
                     <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: 'var(--text-secondary)' }}>
                       🚌 Buses on This Route
                     </h3>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                       {route.busesOnRoute.map(bus => (
                         <div key={bus.id} style={{
-                          padding: '8px 14px',
+                          padding: '12px 16px',
                           background: 'var(--bg-glass)',
                           border: '1px solid var(--border-glass)',
                           borderRadius: 'var(--radius-sm)',
-                          fontSize: '0.85rem'
+                          fontSize: '0.85rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          flexWrap: 'wrap'
                         }}>
-                          <span style={{ fontWeight: 600 }}>{bus.name}</span>
-                          <span style={{ color: 'var(--text-dim)', marginLeft: '8px' }}>{bus.type}</span>
-                          <span className={`status-indicator status-${bus.status}`} style={{ marginLeft: '8px' }}>
-                            <span className="status-dot" style={{ display: 'inline-block', width: '6px', height: '6px', marginRight: '4px' }}></span>
-                            {bus.status}
-                          </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontWeight: 600 }}>{bus.name}</span>
+                            <span style={{ color: 'var(--text-dim)' }}>{bus.type}</span>
+                            <span className={`status-indicator status-${bus.status}`}>
+                              <span className="status-dot" style={{ display: 'inline-block', width: '6px', height: '6px', marginRight: '4px' }}></span>
+                              {bus.status}
+                            </span>
+                          </div>
+                          <button
+                            id={`track-bus-${bus.id}`}
+                            onClick={(e) => { e.stopPropagation(); navigate(`/track/${bus.id}`); }}
+                            style={{
+                              padding: '6px 14px',
+                              background: 'var(--gradient-blue, linear-gradient(135deg, #00b4d8, #0077b6))',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontWeight: 600,
+                              fontSize: '0.8rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '5px',
+                              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                              whiteSpace: 'nowrap'
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,180,216,0.4)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                          >
+                            📍 Track Live
+                          </button>
                         </div>
                       ))}
                     </div>
